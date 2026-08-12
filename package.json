@@ -4,14 +4,38 @@
   "description": "Convert macOS PWA desktop apps between Safari, Chromium, and Firefox-family browsers",
   "type": "module",
   "bin": {
-    "pwa-switch": "./src/cli.ts"
+    "pwa-switch": "./bin/pwa-switch.mjs"
+  },
+  "exports": {
+    ".": "./bin/pwa-switch.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "AGENTS.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tariqwest/pwa-browser-switcher.git"
+  },
+  "homepage": "https://github.com/tariqwest/pwa-browser-switcher#readme",
+  "bugs": {
+    "url": "https://github.com/tariqwest/pwa-browser-switcher/issues"
   },
   "scripts": {
     "dev": "bun src/cli.ts",
-    "start": "tsx src/cli.ts",
-    "pwa-switch": "tsx src/cli.ts",
+    "start": "node bin/pwa-switch.mjs",
+    "pwa-switch": "node bin/pwa-switch.mjs",
+    "cli:tsx": "tsx src/cli.ts",
     "test": "bun test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "release": "node scripts/release.mjs",
+    "release:dry": "node scripts/release.mjs --dry-run",
+    "formula": "node scripts/generate-homebrew-formula.mjs",
+    "formula:write": "node scripts/generate-homebrew-formula.mjs --write Formula/pwa-browser-switcher.rb"
   },
   "engines": {
     "node": ">=20"
@@ -29,13 +53,13 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^13.1.0",
-    "plist": "^3.1.0"
+    "plist": "^3.1.0",
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
     "@types/bun": "^1.2.18",
     "@types/node": "^22.15.30",
     "@types/plist": "^3.0.5",
-    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

@@ -1,7 +1,16 @@
-#!/usr/bin/env -S npx --yes tsx
+/**
+ * CLI implementation (TypeScript source).
+ *
+ * Prefer the published Node entrypoint: `bin/pwa-switch.mjs` (uses tsx, no compile).
+ * Dev alternatives:
+ *   bun src/cli.ts …
+ *   npx tsx src/cli.ts …
+ *   node --import tsx src/cli.ts …
+ */
 import { Command } from "commander";
 import { writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { detectBrowsers, resolveAlias } from "./browsers/registry.js";
 import { scanPwas } from "./discover/scan.js";
 import {
@@ -13,6 +22,16 @@ import type { BrowserAlias, ConvertResult, PwaDescriptor } from "./types.js";
 import { error, info, out, setLogMode, warn } from "./util/log.js";
 import { expandHome } from "./util/paths.js";
 
+function packageVersion(): string {
+  try {
+    const pkgPath = join(dirname(fileURLToPath(import.meta.url)), "..", "package.json");
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as { version?: string };
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
 const program = new Command();
 
 program
@@ -20,7 +39,7 @@ program
   .description(
     "Convert macOS PWA desktop apps between Safari/Orion, Chromium (Chrome, Edge, Brave, Helium), and Firefox-family browsers",
   )
-  .version("0.1.0")
+  .version(packageVersion())
   .option("--json", "JSON output where applicable", false)
   .option("-q, --quiet", "Less logging", false)
   .hook("preAction", (thisCommand) => {
@@ -318,7 +337,9 @@ function printResults(results: ConvertResult[], json?: boolean): void {
   console.log(`\nDone: ${ok}/${results.length} ok-ish, ${results.filter((r) => r.status === "failed").length} failed.`);
 }
 
-program.parseAsync(process.argv).catch((e) => {
+try {
+  await program.parseAsync(process.argv);
+} catch (e) {
   error(String(e));
   process.exit(1);
-});
+}
