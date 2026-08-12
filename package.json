@@ -1,0 +1,41 @@
+{
+  "name": "pwa-browser-switcher",
+  "version": "0.1.0",
+  "description": "Convert macOS PWA desktop apps between Safari, Chromium, and Firefox-family browsers",
+  "type": "module",
+  "bin": {
+    "pwa-switch": "./src/cli.ts"
+  },
+  "scripts": {
+    "dev": "bun src/cli.ts",
+    "start": "tsx src/cli.ts",
+    "pwa-switch": "tsx src/cli.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "pwa",
+    "macos",
+    "browser",
+    "chrome",
+    "safari",
+    "firefox",
+    "brave",
+    "helium"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "plist": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.18",
+    "@types/node": "^22.15.30",
+    "@types/plist": "^3.0.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
